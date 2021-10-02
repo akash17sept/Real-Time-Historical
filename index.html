@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        table{
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td,th{
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+        }
+        th{
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <table>
+        <thread>
+            <tr>
+                <th>Temperature</th>
+                <th>Battery Level</th>
+                <th>TimeStamp</th>
+            </tr>
+        </thread>
+        <tbody id="tableData"></tbody>
+    </table>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io.connect('http://localhost:3000')
+        socket.on('connect',(data)=>{
+            socket.emit('join','hello client connected')
+        })
+        socket.on('message',(data)=>{
+            // console.log(data)
+            loadData(data)
+        })
+
+        function loadData(data){
+            const tableBody = document.getElementById('tableData')
+            let datahtml = ''
+            for(let d in data){
+                datahtml += `<tr><td>${data[d].temperature}</td><td>${data[d].batteryLevel}</td><td>${data[d].timeStamp}</td></tr>`
+                tableBody.innerHTML = datahtml
+            }
+        }
+    </script>
+</body>
+</html>
